@@ -29,7 +29,7 @@
     <section id="question" class="container mb-5 pb-5">
         <div class="row justify-content-center">
             <h1 class="typing">
-                What movie are you looking for?
+                What movie or show are you looking for?
             </h1>
         </div>
     </section>
@@ -38,17 +38,15 @@
     <section id="searching" class="container">
         <div class="row d-flex justify-content-center">
             <form class="search-box">
-                <input type="text" class="search-text" placeholder="Type to Search">
-
-                <!-- Need to build in the search query as the href -->
-                <a class="search-btn d-flex justify-content-center align-items-center" href="">
+                <input type="search" class="search-text" placeholder="Type to Search">
+                <button class="search-btn d-flex justify-content-center align-items-center" id="search-button">
                     <!-- Button imported from Bootstrap -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-search" viewBox="0 0 16 16">
                         <path
                             d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                     </svg>
-                </a>
+                </button>
             </form>
         </div>
     </section>
@@ -56,22 +54,46 @@
     <!-- Grid of search results -->
     <section id="results" class="container">
         <div class="row mr-0 ml-0 d-flex justify-content-between">
-            <div class="movie img-fluid col-4 d-flex justify-content-center">
-                <img
-                    src=https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg">
+            <div class="card img-fluid col-4 d-flex justify-content-center">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img class="img-fluid" id="movie-art" src="">
+                    </div>
+                    <div class="card-overlay mt-md-3">
+                        <div class="movie-title"></div>
+                        <div class="release-date"></div>
+                        <div class="movie-info"></div>
+                        <div class="stream-on">
+                            <b>Watch Here</b>
+                            <ul class="subscription"><b>Steam On:</b></ul>
+                            <ul class="rent"><b>Rent On:</b></ul>
+                            <ul class="buy"><b>Buy On:</b></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card img-fluid col-4 d-flex justify-content-center">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img class="img-fluid" src="">
+                        </div>
+                        <div class="card-overlay">
+                        </div>
+                    </div>
+                </div>
+                <div class="card img-fluid col-4 d-flex justify-content-center">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img class="img-fluid" src="">
+                        </div>
+                        <div class="card-overlay">
+
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="movie img-fluid col-4 d-flex justify-content-center">
-                <img
-                    src=https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg">
-            </div>
-            <div class="movie img-fluid col-4 d-flex justify-content-center">
-                <img
-                    src=https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg">
-            </div>
-        </div>
     </section>
 
-    <!-- jQuery, Popper, Bootstrap, app.js link -->
+    <!-- jQuery, Popper, Bootstrap, TMDB library, Axios, app.js,  link -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -81,7 +103,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
-    <script src="app.js"></script>
+    <script type="module" src="themoviedb.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="module" src="app.js"></script>
+    <script src="config.js"></script>
 </body>
 
 </html>

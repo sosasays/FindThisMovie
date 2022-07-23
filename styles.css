@@ -1,4 +1,4 @@
-/* Typewriter animation for on-screen question */
+/* Typewriter animation for on-screen question. */
 
 @keyframes typing {
 	from {
@@ -15,14 +15,14 @@
 	font: bold 300% Consolas, Monaco, monospace;
 	border-right: .05em solid black;
 	width: 16.5em;
-	width: 31ch;
+	width: 39ch;
 	margin-top: 25%;
 	white-space: nowrap;
 	overflow: hidden;
-	animation: typing 2s steps(31, end), blink-caret .5s step-end 10 alternate;
+	animation: typing 1.5s steps(39, end), blink-caret .5s step-end 10 alternate;
 }
 
-/* Search button and search box animation */
+/* Search button and search box animation. */
 
 .search-box {
 	background: black;
@@ -38,6 +38,7 @@
 	border-radius: 50%;
 	background: transparent;
 	transition: 0.45s;
+	border: white;
 }
 
 .search-box:hover > .search-text {
@@ -59,15 +60,32 @@
 	width: 0px;
 }
 
-/* Results grid of movies */
+/* Results grid of movies. */
+
+.card {
+	border: none;
+}
 
 img {
-	width: 200px;
-	height: 300px;
+	width: 400px;
+	height: 500px;
 	object-fit: cover;
+	border-radius: 1.5rem;
+	box-shadow: 0 4px 8px 5px rgba(0, 0, 0, 0.4);
 }
 
 #results {
 	margin-top: 30%;
 	margin-bottom: 50%;
+	display: none;
+}
+
+.card-overlay {
+	font-family: Consolas, Monaco, monospace;
+	color: black;
+}
+
+b {
+	background-color: black;
+	color: white;
 }
