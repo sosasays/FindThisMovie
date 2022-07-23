@@ -1,0 +1,73 @@
+/* Typewriter animation for on-screen question */
+
+@keyframes typing {
+	from {
+		width: 0;
+	}
+}
+@keyframes blink-caret {
+	100% {
+		border-color: transparent;
+	}
+}
+
+.typing {
+	font: bold 300% Consolas, Monaco, monospace;
+	border-right: .05em solid black;
+	width: 16.5em;
+	width: 31ch;
+	margin-top: 25%;
+	white-space: nowrap;
+	overflow: hidden;
+	animation: typing 2s steps(31, end), blink-caret .5s step-end 10 alternate;
+}
+
+/* Search button and search box animation */
+
+.search-box {
+	background: black;
+	border-radius: 40px;
+	padding: 10px;
+}
+
+.search-btn {
+	color: white;
+	float: right;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: transparent;
+	transition: 0.45s;
+}
+
+.search-box:hover > .search-text {
+	width: 240px;
+	padding: 0 6px;
+}
+
+.search-text {
+	border: none;
+	font: bold 100% Consolas, Monaco, monospace;
+	background: none;
+	outline: none;
+	float: left;
+	padding: 0;
+	color: white;
+	font-size: 16px;
+	transition: 0.45s;
+	line-height: 40px;
+	width: 0px;
+}
+
+/* Results grid of movies */
+
+img {
+	width: 200px;
+	height: 300px;
+	object-fit: cover;
+}
+
+#results {
+	margin-top: 30%;
+	margin-bottom: 50%;
+}
