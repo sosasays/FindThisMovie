@@ -29,7 +29,7 @@
     <section id="question" class="container mb-5 pb-5">
         <div class="row justify-content-center">
             <h1 class="typing">
-                What movie are you looking for?
+                What movie or show are you looking for?
             </h1>
         </div>
     </section>
@@ -38,7 +38,7 @@
     <section id="searching" class="container">
         <div class="row d-flex justify-content-center">
             <form class="search-box">
-                <input type="text" class="search-text" placeholder="Type to Search">
+                <input type="search" class="search-text" placeholder="Type to Search">
                 <button class="search-btn d-flex justify-content-center align-items-center" id="search-button">
                     <!-- Button imported from Bootstrap -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -57,37 +57,40 @@
             <div class="card img-fluid col-4 d-flex justify-content-center">
                 <div class="card-inner">
                     <div class="card-front">
-                        <img class="img-fluid"
-                            src=https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg">
+                        <img class="img-fluid" id="movie-art" src="">
                     </div>
-                    <div class="card-overlay">
+                    <div class="card-overlay mt-md-3">
+                        <div class="movie-title"></div>
+                        <div class="release-date"></div>
+                        <div class="movie-info"></div>
+                        <div class="stream-on">
+                            <b>Watch Here</b>
+                            <ul class="subscription"><b>Steam On:</b></ul>
+                            <ul class="rent"><b>Rent On:</b></ul>
+                            <ul class="buy"><b>Buy On:</b></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card img-fluid col-4 d-flex justify-content-center">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img class="img-fluid" src="">
+                        </div>
+                        <div class="card-overlay">
+                        </div>
+                    </div>
+                </div>
+                <div class="card img-fluid col-4 d-flex justify-content-center">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img class="img-fluid" src="">
+                        </div>
+                        <div class="card-overlay">
 
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="card img-fluid col-4 d-flex justify-content-center">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img class="img-fluid"
-                            src=https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg">
-                    </div>
-                    <div class="card-overlay">
-                    </div>
-                </div>
-            </div>
-            <div class="card img-fluid col-4 d-flex justify-content-center">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img class="img-fluid"
-                            src=https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg">
-                    </div>
-                    <div class="card-overlay">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </section>
 
     <!-- jQuery, Popper, Bootstrap, TMDB library, Axios, app.js,  link -->
