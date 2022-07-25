@@ -1,6 +1,18 @@
-import * as theMovieDb from './themoviedb.js';
+// import * as theMovieDb from './themoviedb.js';
+// JS Library Import Not Working
+
+// function successCB(e) {
+// 	console.log('success', e);
+// }
+
+// function errorCB(e) {
+// 	console.log('fail', e);
+// }
+
+// theMovieDb.search.getMulti({ query: 'Game%20Of%20Thrones' }, successCB, errorCB);
 
 // API token access from config.
+
 const apiKey = config.MY_API_TOKEN;
 
 // Access elements in the DOM.
@@ -15,6 +27,8 @@ const streamOn = document.querySelector('.stream-on');
 const subList = document.querySelector('.subscription');
 const rentList = document.querySelector('.rent');
 const buyList = document.querySelector('.buy');
+const cardFront = document.querySelector('.card-front');
+const cardInfo = document.querySelector('.card-info');
 
 // Add in auto-scroll to the movie film poster grid.
 searchButton.addEventListener('click', (e) => {
@@ -27,9 +41,9 @@ searchButton.addEventListener('click', (e) => {
 
 // Display results grid and scroll to it.
 function displayResults() {
-	results.style.display = 'block';
+	cardFront.style.display = 'block';
 	window.scroll({
-		top      : 1000,
+		top      : cardFront.getBoundingClientRect().top + 1000,
 		behavior : 'smooth'
 	});
 }
@@ -114,14 +128,19 @@ function clearPreviousSearch() {
 	streamOn.appendChild(buyList);
 }
 
-// JS Library Import Not Working
-
-// function successCB(e) {
-// 	console.log('success', e);
-// }
-
-// function errorCB(e) {
-// 	console.log('fail', e);
-// }
-
-// theMovieDb.search.getMulti({ query: 'Game%20Of%20Thrones' }, successCB, errorCB);
+// Toggle to expand the card info section.
+cardFront.addEventListener('click', (e) => {
+	if (cardInfo.style.display && cardInfo.style.display !== 'none') {
+		cardInfo.style.display = 'none';
+		window.scroll({
+			top      : cardFront.getBoundingClientRect().top,
+			behavior : 'smooth'
+		});
+	} else {
+		cardInfo.style.display = 'block';
+		window.scroll({
+			top      : cardInfo.getBoundingClientRect().top,
+			behavior : 'smooth'
+		});
+	}
+});
