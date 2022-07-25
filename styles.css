@@ -15,11 +15,11 @@
 	font: bold 300% Consolas, Monaco, monospace;
 	border-right: .05em solid black;
 	width: 16.5em;
-	width: 39ch;
-	margin-top: 25%;
+	width: 31ch;
+	margin-top: 10%;
 	white-space: nowrap;
 	overflow: hidden;
-	animation: typing 1.5s steps(39, end), blink-caret .5s step-end 10 alternate;
+	animation: typing 1.5s steps(31, end), blink-caret .5s step-end 10 alternate;
 }
 
 /* Search button and search box animation. */
@@ -28,6 +28,7 @@
 	background: black;
 	border-radius: 40px;
 	padding: 10px;
+	margin-bottom: 30vh;
 }
 
 .search-btn {
@@ -67,25 +68,40 @@
 }
 
 img {
-	width: 400px;
-	height: 500px;
-	object-fit: cover;
+	width: 100%;
+	height: 100%;
 	border-radius: 1.5rem;
 	box-shadow: 0 4px 8px 5px rgba(0, 0, 0, 0.4);
 }
 
 #results {
-	margin-top: 30%;
-	margin-bottom: 50%;
-	display: none;
+	position: relative;
 }
 
-.card-overlay {
+.card-front {
+	display: none;
+	width: 400px;
+	height: 600px;
+	margin-bottom: 5%;
+}
+
+/* .card-front:hover {
+	Fill in with animation to elude to clicking movie art for more info.
+} */
+
+.card-info {
 	font-family: Consolas, Monaco, monospace;
 	color: black;
+	display: none;
 }
 
 b {
 	background-color: black;
 	color: white;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.accordion {
+	display: none;
 }
