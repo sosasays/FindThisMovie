@@ -26,122 +26,56 @@
 
 <body>
     <div class="container-fluid mt-5 mb-5">
-        <!-- Typewriter written question to prompt search -->
-        <section id="question" class="row justify-content-center mb-5 pb-5">
-            <h1 class="typing">
-                What movie are you looking for?
-            </h1>
-        </section>
+        <section class="main">
+            <!-- Typewriter written question to prompt search -->
+            <section id="question" class="row justify-content-center mb-5 pb-5">
+                <h1 class="typing">
+                    What movie are you looking for?
+                </h1>
+            </section>
 
-        <!-- Animated button and search box -->
-        <section class="row d-flex justify-content-center">
-            <form class="search-box">
-                <input type="text" class="search-text" placeholder="Type to Search">
-                <button class="search-btn d-flex justify-content-center align-items-center" id="search-button">
-                    <!-- Button imported from Bootstrap -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-search" viewBox="0 0 16 16">
-                        <path
-                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                    </svg>
-                </button>
-            </form>
-        </section>
-
-        <!-- Grid of search results -->
-        <section id="results" class="row">
-            <div class="card img-fluid col-4 d-flex justify-content-center">
-                <div class="card-front">
-                    <img class="img-fluid" id="movie-art" src="">
-                </div>
-            </div>
-        </section>
-
-        <!-- Overview of movie details -->
-        <div class="card-info row">
-            <div class="col-4">
-                <div class="movie-title"></div>
-                <div class="release-date"></div>
-                <div class="movie-info"></div>
-                <div class="stream-on">
-                    <b>Watch Here</b>
-                    <ul class="subscription"><b>Steam On:</b></ul>
-                    <ul class="rent"><b>Rent On:</b></ul>
-                    <ul class="buy"><b>Buy On:</b></ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sample accordion style issues -->
-        <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Accordion Item #1
+            <!-- Animated button and search box -->
+            <section class="row d-flex justify-content-center">
+                <form class="search-box">
+                    <input type="text" class="search-text" placeholder="Type to Search">
+                    <button class="search-btn d-flex justify-content-center align-items-center" id="search-button">
+                        <!-- Button imported from Bootstrap -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-search" viewBox="0 0 16 16">
+                            <path
+                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                        </svg>
                     </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <strong>This is the first item's accordion body.</strong> It is shown by default, until the
-                        collapse
-                        plugin adds the appropriate classes that we use to style each element. These classes control the
-                        overall
-                        appearance, as well as the showing and hiding via CSS transitions. You can modify any of this
-                        with
-                        custom CSS or overriding our default variables. It's also worth noting that just about any HTML
-                        can go
-                        within the <code>.accordion-body</code>, though the transition does limit overflow.
+                </form>
+            </section>
+        </section>
+
+        <section class="grid">
+            <!-- Grid of search results -->
+            <section id="results" class="row d-flex justify-content-center pt-3">
+            </section>
+
+            <!-- Overview of movie details -->
+            <div class="card-info col-xs-1 col-m-3">
+                <div class="card-format">
+                    <div class="movie-title"></div>
+                    <div class="release-date"></div>
+                    <div class="movie-info"></div>
+                    <div class="stream-on">
+                        <b>Watch Here</b>
+                        <ul class="subscription"><b>Steam On:</b></ul>
+                        <ul class="rent"><b>Rent On:</b></ul>
+                        <ul class="buy"><b>Buy On:</b></ul>
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Accordion Item #2
-                    </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
-                        collapse
-                        plugin adds the appropriate classes that we use to style each element. These classes control the
-                        overall
-                        appearance, as well as the showing and hiding via CSS transitions. You can modify any of this
-                        with
-                        custom CSS or overriding our default variables. It's also worth noting that just about any HTML
-                        can go
-                        within the <code>.accordion-body</code>, though the transition does limit overflow.
-                    </div>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Accordion Item #3
-                    </button>
-                </h2>
-                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
-                        collapse
-                        plugin adds the appropriate classes that we use to style each element. These classes control the
-                        overall
-                        appearance, as well as the showing and hiding via CSS transitions. You can modify any of this
-                        with
-                        custom CSS or overriding our default variables. It's also worth noting that just about any HTML
-                        can go
-                        within the <code>.accordion-body</code>, though the transition does limit overflow.
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
     </div>
+
+    <!-- JQuery for Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
 
     <!-- Popper -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
