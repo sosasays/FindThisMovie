@@ -67,7 +67,7 @@
 	border: none;
 }
 
-img {
+.movie-art {
 	width: 100%;
 	height: 100%;
 	border-radius: 1.5rem;
@@ -76,13 +76,16 @@ img {
 
 #results {
 	position: relative;
+	display: none;
 }
 
-.card-front {
-	display: none;
+.card-front,
+.card-info {
 	width: 400px;
 	height: 600px;
 	margin-bottom: 5%;
+	margin-right: 1vh;
+	margin-left: 1vh;
 }
 
 /* .card-front:hover {
@@ -102,6 +105,18 @@ b {
 	padding-left: 4px;
 }
 
-.accordion {
+/* Full stage styling for grid and search results.  */
+.main {
+	height: 100vh;
+}
+
+.grid {
+	min-height: 100vh;
 	display: none;
+}
+
+.card-format {
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
 }

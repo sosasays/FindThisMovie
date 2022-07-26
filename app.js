@@ -12,7 +12,6 @@
 // theMovieDb.search.getMulti({ query: 'Game%20Of%20Thrones' }, successCB, errorCB);
 
 // API token access from config.
-
 const apiKey = config.MY_API_TOKEN;
 
 // Access elements in the DOM.
@@ -22,28 +21,31 @@ let searchQuery;
 const movieTitle = document.querySelector('.movie-title');
 const releaseDate = document.querySelector('.release-date');
 const movieInfo = document.querySelector('.movie-info');
-const movieArt = document.querySelector('#movie-art');
 const streamOn = document.querySelector('.stream-on');
 const subList = document.querySelector('.subscription');
 const rentList = document.querySelector('.rent');
 const buyList = document.querySelector('.buy');
-const cardFront = document.querySelector('.card-front');
 const cardInfo = document.querySelector('.card-info');
+const grid = document.querySelector('.grid');
 
 // Add in auto-scroll to the movie film poster grid.
 searchButton.addEventListener('click', (e) => {
-	clearPreviousSearch();
-	getSearchResults();
 	// Prevent the form from refreshing the page.
 	e.preventDefault();
+	// Clear the results grid of movie art.
+	results.innerHTML = '';
+	// Clear the movie info and additional details.
+	clearCardInfo();
+	getSearchResults();
 	displayResults();
 });
 
 // Display results grid and scroll to it.
 function displayResults() {
-	cardFront.style.display = 'block';
+	grid.style.display = 'flex';
+	results.style.display = 'flex';
 	window.scroll({
-		top      : cardFront.getBoundingClientRect().top + 1000,
+		top      : results.getBoundingClientRect().top,
 		behavior : 'smooth'
 	});
 }
@@ -55,23 +57,78 @@ function getSearchResults() {
 	axios
 		.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(searchQuery)}`)
 		.then((response) => {
-			// Capture the unique movie ID from search.
-			const movieID = response.data.results[0].id;
-			// Update movie poster art.
-			movieArt.src = `https://image.tmdb.org/t/p/w500/` + response.data.results[0]['poster_path'];
+			response.data.results.forEach((movie, idx) => {
+				if (movie.id && movie['poster_path']) {
+					// Create div for card with Bootstrap classes required for formatting.
+					const cardDiv = document.createElement('div');
+					const cardClasses = [
+						'card',
+						'img-fluid',
+						'col-xs-1',
+						'col-m-3',
+						'd-flex',
+						'justify-content-center'
+					];
+					cardDiv.classList.add(...cardClasses);
+
+					// Create div for card-front with Bootstrap classes required for formatting and ID attribute.
+					const cardFrontDiv = document.createElement('div');
+					cardFrontDiv.classList.add('card-front');
+
+					// Capture the unique movie ID from search and add to card-front.
+					const movieID = movie.id;
+					cardFrontDiv.setAttribute('id', `${movieID}`);
+
+					// Create img to be hold movie artwork in results grid.
+					const imgArt = document.createElement('img');
+					const imgClasses = [
+						'movie-art',
+						'img-fluid'
+					];
+					imgArt.classList.add(...imgClasses);
+					imgArt.setAttribute('id', `${movieID}`);
+					imgArt.setAttribute(
+						'src',
+						`https://image.tmdb.org/t/p/w500/${response.data.results[idx]['poster_path']}`
+					);
+
+					// Create the card HTML element with all nested divs.
+					results.appendChild(cardDiv);
+					cardDiv.appendChild(cardFrontDiv);
+					cardFrontDiv.appendChild(imgArt);
+
+					// Show movie details once movie art is clicked.
+					const movieCover = document.getElementById(movieID);
+					movieCover.addEventListener('click', (e) => {
+						clearCardInfo();
+						getMovieDetails(movieID);
+						showCardInfo(e);
+					});
+				}
+			});
+		})
+		.catch((err) => console.log(err));
+}
+
+// Given the unique movieID search for and return the remaining details.
+function getMovieDetails(movieID) {
+	axios
+		.get(`https://api.themoviedb.org/3/movie/${movieID}?api_key=${apiKey}&language=en-US`)
+		.then((response) => {
 			// Update movie title.
-			movieTitle.innerHTML = '<b>Title: </b><br>' + response.data.results[0]['original_title'];
-			// Update movie release date.
-			releaseDate.innerHTML = '<b>Release Date: </b><br>' + response.data.results[0]['release_date'];
-			// Update movie description.
-			movieInfo.innerHTML = '<b>Description: </b><br>' + response.data.results[0]['overview'];
-			availableStreaming(movieID);
+			movieTitle.innerHTML = '<b>Title: </b><br>' + response.data['title'];
+			// // Update movie release date.
+			releaseDate.innerHTML = '<b>Release Date: </b><br>' + response.data['release_date'];
+			// // Update movie description.
+			movieInfo.innerHTML = '<b>Description: </b><br>' + response.data['overview'];
+			// Update where you can stream, rent, or buy the movie.
+			getAvailableStreaming(movieID);
 		})
 		.catch((err) => console.log(err));
 }
 
 // Search for and append the list of watch providers where a movie is available to be streamed, rented, or bought.
-function availableStreaming(movieID) {
+function getAvailableStreaming(movieID) {
 	axios
 		.get(`https://api.themoviedb.org/3/movie/${movieID}/watch/providers?api_key=${apiKey}`)
 		.then((response) => {
@@ -118,7 +175,11 @@ function availableStreaming(movieID) {
 		.catch((err) => console.log(err));
 }
 
-function clearPreviousSearch() {
+// Clear the additional movie details card and available streaming services.
+function clearCardInfo() {
+	movieTitle.innerHTML = '';
+	releaseDate.innerHTML = '';
+	movieInfo.innerHTML = '';
 	subList.innerHTML = '<b>With Subscription:</b>';
 	rentList.innerHTML = '<b>Rent On:</b>';
 	buyList.innerHTML = '<b>Buy On:</b>';
@@ -128,19 +189,9 @@ function clearPreviousSearch() {
 	streamOn.appendChild(buyList);
 }
 
-// Toggle to expand the card info section.
-cardFront.addEventListener('click', (e) => {
-	if (cardInfo.style.display && cardInfo.style.display !== 'none') {
-		cardInfo.style.display = 'none';
-		window.scroll({
-			top      : cardFront.getBoundingClientRect().top,
-			behavior : 'smooth'
-		});
-	} else {
-		cardInfo.style.display = 'block';
-		window.scroll({
-			top      : cardInfo.getBoundingClientRect().top,
-			behavior : 'smooth'
-		});
-	}
-});
+// Show display card of movie details and streaming availability in results grid.
+function showCardInfo(e) {
+	const targetMovie = document.getElementById(e.target.id);
+	cardInfo.style.display = 'inline';
+	targetMovie.after(cardInfo);
+}
