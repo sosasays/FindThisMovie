@@ -192,6 +192,6 @@ function clearCardInfo() {
 // Show display card of movie details and streaming availability in results grid.
 function showCardInfo(e) {
 	const targetMovie = document.getElementById(e.target.id);
-	cardInfo.style.display = 'inline';
+	cardInfo.style.display = cardInfo.style.display == 'block' ? 'none' : 'block';
 	targetMovie.after(cardInfo);
 }
