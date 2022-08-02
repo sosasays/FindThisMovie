@@ -25,6 +25,11 @@ async function renderResults() {
 		// API request and populate the results grid of movie artwork.
 		const movieData = await fetchMovies(searchQuery);
 		renderMovies(movieData);
+		// API request and populate the results grid of tv shows artwork.
+		const tvShowsData = await fetchTvShows(searchQuery);
+		renderTvShows(tvShowsData);
+		// Sort the tv shows and movies by their popularity ranking stored on the HTML attribute data-popularity.
+		sortResultsByPopularity();
 	} catch (err) {
 		console.log(err);
 	} finally {
@@ -49,6 +54,14 @@ function toggleLoader(state) {
 	}
 }
 
+// Check the validity of a response and parse if it is ok.
+async function checkStatusAndParse(response) {
+	if (!response.ok) {
+		throw new Error(`Status Code Error: ${response.status}`);
+	}
+	return await response.json();
+}
+
 // Fetch from the API all movies matching the search query.
 async function fetchMovies(searchQuery) {
 	try {
@@ -62,21 +75,13 @@ async function fetchMovies(searchQuery) {
 	}
 }
 
-// Check the validity of a response and parse if it is ok.
-async function checkStatusAndParse(response) {
-	if (!response.ok) {
-		throw new Error(`Status Code Error: ${response.status}`);
-	}
-	return await response.json();
-}
-
 // Render the results grid with all matching movies from the search query.
 async function renderMovies(movieData) {
 	try {
 		movieData.results.forEach(async (movie) => {
-			renderMovieArtwork(movie);
-			renderMovieDetails(movie);
-			const streamingData = await fetchStreamingData(movie.id);
+			renderArtwork(movie);
+			renderDetails(movie, true, false);
+			const streamingData = await fetchStreamingData(movie.id, true, false);
 			renderStreamingData(streamingData, movie.id);
 		});
 	} catch (err) {
@@ -84,10 +89,37 @@ async function renderMovies(movieData) {
 	}
 }
 
+// Fetch from the API all tv shows matching the search query.
+async function fetchTvShows(searchQuery) {
+	try {
+		const showsResponse = await fetch(
+			`https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&query=${encodeURIComponent(searchQuery)}`
+		);
+		const showsData = await checkStatusAndParse(showsResponse);
+		return showsData;
+	} catch (err) {
+		console.log(err);
+	}
+}
+
+// Render the results grid with all matching tv shows from the search query.
+async function renderTvShows(showsData) {
+	try {
+		showsData.results.forEach(async (show) => {
+			renderArtwork(show);
+			renderDetails(show, false, true);
+			const streamingData = await fetchStreamingData(show.id, false, true);
+			renderStreamingData(streamingData, show.id);
+		});
+	} catch (err) {
+		console.log(err);
+	}
+}
+
 // Render the movie artwork into the results grid.
-function renderMovieArtwork(movie) {
-	if (movie.id && movie['poster_path']) {
-		const artworkURL = `https://image.tmdb.org/t/p/w500/${movie['poster_path']}`;
+function renderArtwork(media) {
+	if (media.id && media['poster_path']) {
+		const artworkURL = `https://image.tmdb.org/t/p/w500/${media['poster_path']}`;
 
 		// WHY DOES REPLACING THE BELOW WITH THE FOLLOWING INNERHTML NOT WORK FOR ADDING AN EVENT LISTENER?
 		// const movieID = movie.id;
@@ -108,14 +140,15 @@ function renderMovieArtwork(movie) {
 			'justify-content-center'
 		];
 		cardDiv.classList.add(...cardClasses);
+		cardDiv.setAttribute('data-popularity', media.popularity);
 
 		// Create div for card-front with Bootstrap classes required for formatting and ID attribute.
 		const cardFrontDiv = document.createElement('div');
 		cardFrontDiv.classList.add('card-front');
 
 		// Capture the unique movie ID from search and add to card-front.
-		const movieID = `${movie.id}`;
-		cardFrontDiv.setAttribute('id', `${movieID}`);
+		const id = `${media.id}`;
+		cardFrontDiv.setAttribute('id', `${id}`);
 
 		// Create img to be hold movie artwork in results grid.
 		const imgArt = document.createElement('img');
@@ -124,7 +157,7 @@ function renderMovieArtwork(movie) {
 			'img-fluid'
 		];
 		imgArt.classList.add(...imgClasses);
-		imgArt.setAttribute('id', `${movieID}`);
+		imgArt.setAttribute('id', `${id}`);
 		imgArt.setAttribute('src', artworkURL);
 
 		// Create the card HTML element with all nested divs.
@@ -133,23 +166,33 @@ function renderMovieArtwork(movie) {
 		cardFrontDiv.appendChild(imgArt);
 
 		// Listen for a click on the movie artwork and show the movie details when it occurs.
-		const movieCover = document.getElementById(movieID);
-		movieCover.addEventListener('click', (e) => {
-			showMovieDetails(e);
+		const artCover = document.getElementById(id);
+		artCover.addEventListener('click', (e) => {
+			showDetails(e);
 		});
 	}
 }
 
-// Render the card containing all the movie details from the API request.
-function renderMovieDetails(movie) {
-	if (movie.id && movie['poster_path']) {
+// Render the card containing all the movie or show details from the API request.
+function renderDetails(media, isMovie, isShow) {
+	let mediaName;
+	let mediaDate;
+	if (isMovie) {
+		mediaName = 'title';
+		mediaDate = 'release_date';
+	}
+	if (isShow) {
+		mediaName = 'name';
+		mediaDate = 'first_air_date';
+	}
+	if (media.id && media['poster_path']) {
 		const cardInfo = document.createElement('div');
-		cardInfo.innerHTML = `<div class="card-info col-xs-1 col-m-3" id="card${movie.id}">
+		cardInfo.innerHTML = `<div class="card-info col-xs-1 col-m-3" id="card${media.id}">
         <div class="card-format p-4">
-            <div class="movie-title mb-3"><b>Title: </b><br>${movie['title']}</div>
-            <div class="release-date mb-3"><b>Release Date: </b><br>${movie['release_date']}</div>
-            <div class="movie-info mb-3"><b>Description: </b><br>${movie['overview']}</div>
-            <div class="stream-on" id="stream${movie.id}">
+            <div class="movie-title mb-3"><b>Title: </b><br>${media[mediaName]}</div>
+            <div class="release-date mb-3"><b>Release Date: </b><br>${media[mediaDate]}</div>
+            <div class="movie-info mb-3"><b>Description: </b><br>${media['overview']}</div>
+            <div class="stream-on" id="stream${media.id}">
                 <b>Watch Here</b>
                 <ul class="subscription"><b>Steam On:</b></ul>
                 <ul class="rent"><b>Rent On:</b></ul>
@@ -158,17 +201,23 @@ function renderMovieDetails(movie) {
         </div>
     </div>`;
 		// Add the hidden movie details card after the relevant movie artwork card.
-		const targetMovie = document.getElementById(movie.id);
-		targetMovie.after(cardInfo);
+		const targetMedia = document.getElementById(media.id);
+		targetMedia.after(cardInfo);
 	}
 }
 
 // Fetch the list of watch providers where a movie is available to be streamed, rented, or bought.
-async function fetchStreamingData(movieID) {
+async function fetchStreamingData(id, isMovie, isShow) {
 	try {
-		const streamingResponse = await fetch(
-			`https://api.themoviedb.org/3/movie/${movieID}/watch/providers?api_key=${apiKey}`
-		);
+		let streamingResponse;
+		if (isMovie) {
+			streamingResponse = await fetch(
+				`https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`
+			);
+		}
+		if (isShow) {
+			streamingResponse = await fetch(`https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`);
+		}
 		const streamingData = await checkStatusAndParse(streamingResponse);
 		return streamingData;
 	} catch (err) {
@@ -177,11 +226,11 @@ async function fetchStreamingData(movieID) {
 }
 
 // Render the data of where a movie can be streamed to the movie details card.
-function renderStreamingData(streamingData, movieID) {
-	const streamOn = document.querySelector(`#stream${movieID}`);
-	const subList = document.querySelector(`#stream${movieID} .subscription`);
-	const rentList = document.querySelector(`#stream${movieID} .rent`);
-	const buyList = document.querySelector(`#stream${movieID} .buy`);
+function renderStreamingData(streamingData, id) {
+	const streamOn = document.querySelector(`#stream${id}`);
+	const subList = document.querySelector(`#stream${id} .subscription`);
+	const rentList = document.querySelector(`#stream${id} .rent`);
+	const buyList = document.querySelector(`#stream${id} .buy`);
 
 	// Checking if any services are available in Canada.
 	if (!streamingData.results['CA']) {
@@ -224,11 +273,11 @@ function renderStreamingData(streamingData, movieID) {
 }
 
 // Show card of movie details and streaming availability in results grid after the movie artwork that is clicked.
-function showMovieDetails(e) {
-	const targetMovie = document.getElementById(e.target.id);
-	const cardInfo = document.getElementById(`card${e.target.id}`);
-	cardInfo.style.display = cardInfo.style.display == 'block' ? 'none' : 'block';
-	targetMovie.after(cardInfo);
+function showDetails(e) {
+	const targetMedia = document.getElementById(e.target.id);
+	const infoCard = document.getElementById(`card${e.target.id}`);
+	infoCard.style.display = infoCard.style.display == 'block' ? 'none' : 'block';
+	targetMedia.after(infoCard);
 }
 
 // Display results grid and scroll to it.
@@ -239,4 +288,12 @@ function scrollToResults() {
 		top      : results.getBoundingClientRect().top,
 		behavior : 'smooth'
 	});
+}
+
+// Sort results given the assigned data-popularity HTML attribute.
+function sortResultsByPopularity() {
+	var mediaCard = document.querySelectorAll('.card');
+	Array.from(mediaCard)
+		.sort((a, b) => b.dataset.popularity - a.dataset.popularity)
+		.forEach((el) => el.parentNode.appendChild(el));
 }

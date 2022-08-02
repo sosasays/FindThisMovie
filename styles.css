@@ -13,9 +13,10 @@
 
 .typing {
 	font: bold 300% Consolas, Monaco, monospace;
+	font-size: min(4vw, 300%);
 	border-right: .05em solid black;
 	width: 16.5em;
-	width: 31ch;
+	width: 36ch;
 	margin-top: 10%;
 	white-space: nowrap;
 	overflow: hidden;
