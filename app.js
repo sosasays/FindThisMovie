@@ -76,9 +76,11 @@ async function fetchMovies(searchQuery) {
 }
 
 // Render the results grid with all matching movies from the search query.
-async function renderMovies(movieData) {
+async function renderMovies(moviesData) {
 	try {
-		movieData.results.forEach(async (movie) => {
+		// Ensure a valid movie object exists consisting of an id and artwork.
+		const validMoviesData = moviesData.results.filter((movie) => movie.id && movie['poster_path']);
+		validMoviesData.forEach(async (movie) => {
 			renderArtwork(movie);
 			renderDetails(movie, true, false);
 			const streamingData = await fetchStreamingData(movie.id, true, false);
@@ -105,7 +107,9 @@ async function fetchTvShows(searchQuery) {
 // Render the results grid with all matching tv shows from the search query.
 async function renderTvShows(showsData) {
 	try {
-		showsData.results.forEach(async (show) => {
+		// Ensure a valid tv show object exists consisting of an id and artwork.
+		const validShowsData = showsData.results.filter((movie) => movie.id && movie['poster_path']);
+		validShowsData.forEach(async (show) => {
 			renderArtwork(show);
 			renderDetails(show, false, true);
 			const streamingData = await fetchStreamingData(show.id, false, true);
@@ -118,59 +122,57 @@ async function renderTvShows(showsData) {
 
 // Render the movie artwork into the results grid.
 function renderArtwork(media) {
-	if (media.id && media['poster_path']) {
-		const artworkURL = `https://image.tmdb.org/t/p/w500/${media['poster_path']}`;
+	const artworkURL = `https://image.tmdb.org/t/p/w500/${media['poster_path']}`;
 
-		// WHY DOES REPLACING THE BELOW WITH THE FOLLOWING INNERHTML NOT WORK FOR ADDING AN EVENT LISTENER?
-		// const movieID = movie.id;
-		// results.innerHTML += `<div class="card img-fluid col-xs-1 col-m-3 d-flex justify-content-center">
-		//         <div id="${movieID}" class="card-front">
-		//             <img class="movie-art img-fluid" src="${artworkURL}">
-		//         </div>
-		//     </div>`;
+	// WHY DOES REPLACING THE BELOW WITH THE FOLLOWING INNERHTML NOT WORK FOR ADDING AN EVENT LISTENER?
+	// const movieID = movie.id;
+	// results.innerHTML += `<div class="card img-fluid col-xs-1 col-m-3 d-flex justify-content-center">
+	//         <div id="${movieID}" class="card-front">
+	//             <img class="movie-art img-fluid" src="${artworkURL}">
+	//         </div>
+	//     </div>`;
 
-		// Create div for card with Bootstrap classes required for formatting.
-		const cardDiv = document.createElement('div');
-		const cardClasses = [
-			'card',
-			'img-fluid',
-			'col-xs-1',
-			'col-m-3',
-			'd-flex',
-			'justify-content-center'
-		];
-		cardDiv.classList.add(...cardClasses);
-		cardDiv.setAttribute('data-popularity', media.popularity);
+	// Create div for card with Bootstrap classes required for formatting.
+	const cardDiv = document.createElement('div');
+	const cardClasses = [
+		'card',
+		'img-fluid',
+		'col-xs-1',
+		'col-m-3',
+		'd-flex',
+		'justify-content-center'
+	];
+	cardDiv.classList.add(...cardClasses);
+	cardDiv.setAttribute('data-popularity', media.popularity);
 
-		// Create div for card-front with Bootstrap classes required for formatting and ID attribute.
-		const cardFrontDiv = document.createElement('div');
-		cardFrontDiv.classList.add('card-front');
+	// Create div for card-front with Bootstrap classes required for formatting and ID attribute.
+	const cardFrontDiv = document.createElement('div');
+	cardFrontDiv.classList.add('card-front');
 
-		// Capture the unique movie ID from search and add to card-front.
-		const id = `${media.id}`;
-		cardFrontDiv.setAttribute('id', `${id}`);
+	// Capture the unique movie ID from search and add to card-front.
+	const id = `${media.id}`;
+	cardFrontDiv.setAttribute('id', `${id}`);
 
-		// Create img to be hold movie artwork in results grid.
-		const imgArt = document.createElement('img');
-		const imgClasses = [
-			'movie-art',
-			'img-fluid'
-		];
-		imgArt.classList.add(...imgClasses);
-		imgArt.setAttribute('id', `${id}`);
-		imgArt.setAttribute('src', artworkURL);
+	// Create img to be hold movie artwork in results grid.
+	const imgArt = document.createElement('img');
+	const imgClasses = [
+		'movie-art',
+		'img-fluid'
+	];
+	imgArt.classList.add(...imgClasses);
+	imgArt.setAttribute('id', `${id}`);
+	imgArt.setAttribute('src', artworkURL);
 
-		// Create the card HTML element with all nested divs.
-		results.appendChild(cardDiv);
-		cardDiv.appendChild(cardFrontDiv);
-		cardFrontDiv.appendChild(imgArt);
+	// Create the card HTML element with all nested divs.
+	results.appendChild(cardDiv);
+	cardDiv.appendChild(cardFrontDiv);
+	cardFrontDiv.appendChild(imgArt);
 
-		// Listen for a click on the movie artwork and show the movie details when it occurs.
-		const artCover = document.getElementById(id);
-		artCover.addEventListener('click', (e) => {
-			showDetails(e);
-		});
-	}
+	// Listen for a click on the movie artwork and show the movie details when it occurs.
+	const artCover = document.getElementById(id);
+	artCover.addEventListener('click', (e) => {
+		showDetails(e);
+	});
 }
 
 // Render the card containing all the movie or show details from the API request.
@@ -185,9 +187,8 @@ function renderDetails(media, isMovie, isShow) {
 		mediaName = 'name';
 		mediaDate = 'first_air_date';
 	}
-	if (media.id && media['poster_path']) {
-		const cardInfo = document.createElement('div');
-		cardInfo.innerHTML = `<div class="card-info col-xs-1 col-m-3" id="card${media.id}">
+	const cardInfo = document.createElement('div');
+	cardInfo.innerHTML = `<div class="card-info col-xs-1 col-m-3" id="card${media.id}">
         <div class="card-format p-4">
             <div class="movie-title mb-3"><b>Title: </b><br>${media[mediaName]}</div>
             <div class="release-date mb-3"><b>Release Date: </b><br>${media[mediaDate]}</div>
@@ -200,10 +201,9 @@ function renderDetails(media, isMovie, isShow) {
             </div>
         </div>
     </div>`;
-		// Add the hidden movie details card after the relevant movie artwork card.
-		const targetMedia = document.getElementById(media.id);
-		targetMedia.after(cardInfo);
-	}
+	// Add the hidden movie details card after the relevant movie artwork card.
+	const targetMedia = document.getElementById(media.id);
+	targetMedia.after(cardInfo);
 }
 
 // Fetch the list of watch providers where a movie is available to be streamed, rented, or bought.
