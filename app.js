@@ -1,5 +1,5 @@
 // API token access from config.
-const apiKey = config.MY_API_TOKEN;
+const apiKey = "875ebf3e8605e8636054eb7af4e751ef";
 
 // Access elements in the DOM.
 const searchButton = document.querySelector('#search-button');
@@ -132,6 +132,14 @@ function renderArtwork(media) {
 	//         </div>
 	//     </div>`;
 
+	/*
+	 Not 100% sure on this error
+	 Check this out: https://stackoverflow.com/questions/37448622/why-can-event-listeners-stop-working-after-using-element-innerhtml
+	 Try use insertAdjacentHTML
+
+	*/
+
+
 	// Create div for card with Bootstrap classes required for formatting.
 	const cardDiv = document.createElement('div');
 	const cardClasses = [
@@ -206,6 +214,12 @@ function renderDetails(media, isMovie, isShow) {
 	targetMedia.after(cardInfo);
 }
 
+/* This could be handled slightly better:
+		1. The parameters 'isMovie' and 'isShow' aren't intuitive when calling the function:
+			fetchStreamingData(id, true, false)  // How do I know if I'm fetching movies or shows? answer: I don't
+			So be a bit more explicit in the naming of arguments
+		2. You can clean up the logic of the if statements
+	*/
 // Fetch the list of watch providers where a movie is available to be streamed, rented, or bought.
 async function fetchStreamingData(id, isMovie, isShow) {
 	try {
@@ -224,6 +238,36 @@ async function fetchStreamingData(id, isMovie, isShow) {
 		console.log(err);
 	}
 }
+
+/*
+Comment this out to see changes
+
+// New streaming func
+async function fetchStreamingData(id, mediaType="movie") {
+	// default is movie
+	try {
+		let apiUrl = `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`
+		if (mediaType === "show") {
+			apiUrl = `https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`
+		}
+		streamingResponse = await fetch(apiUrl);
+		const streamingData = await checkStatusAndParse(streamingResponse);
+		return streamingData;
+	} catch (err) {
+		console.log(err);
+	}
+}
+
+// And then these for helper functions
+async function fetchMovieData(movieId) {
+	return await fetchStreamingData(movieId)
+}
+
+async function fetchShowData(showId) {
+	return await fetchStreamingData(showId, "show")
+}
+
+*/
 
 // Render the data of where a movie can be streamed to the movie details card.
 function renderStreamingData(streamingData, id) {
