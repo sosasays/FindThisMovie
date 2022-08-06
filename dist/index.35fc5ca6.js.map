@@ -1,0 +1,1 @@
+{"mappings":"AAAA,IAAIA,OAAS,CACZC,aAAe","sources":["config.js"],"sourcesContent":["var config = {\n\tMY_API_TOKEN : '875ebf3e8605e8636054eb7af4e751ef'\n};\n"],"names":["config","MY_API_TOKEN"],"version":3,"file":"index.35fc5ca6.js.map"}

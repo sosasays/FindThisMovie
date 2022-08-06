@@ -82,8 +82,8 @@ async function renderMovies(moviesData) {
 		const validMoviesData = moviesData.results.filter((movie) => movie.id && movie['poster_path']);
 		validMoviesData.forEach(async (movie) => {
 			renderArtwork(movie);
-			renderDetails(movie, true, false);
-			const streamingData = await fetchStreamingData(movie.id, true, false);
+			renderDetails(movie, 'movie');
+			const streamingData = await fetchMovieData(movie.id);
 			renderStreamingData(streamingData, movie.id);
 		});
 	} catch (err) {
@@ -111,8 +111,8 @@ async function renderTvShows(showsData) {
 		const validShowsData = showsData.results.filter((movie) => movie.id && movie['poster_path']);
 		validShowsData.forEach(async (show) => {
 			renderArtwork(show);
-			renderDetails(show, false, true);
-			const streamingData = await fetchStreamingData(show.id, false, true);
+			renderDetails(show, 'show');
+			const streamingData = await fetchShowData(show.id);
 			renderStreamingData(streamingData, show.id);
 		});
 	} catch (err) {
@@ -123,50 +123,17 @@ async function renderTvShows(showsData) {
 // Render the movie artwork into the results grid.
 function renderArtwork(media) {
 	const artworkURL = `https://image.tmdb.org/t/p/w500/${media['poster_path']}`;
+	const id = media.id;
 
-	// WHY DOES REPLACING THE BELOW WITH THE FOLLOWING INNERHTML NOT WORK FOR ADDING AN EVENT LISTENER?
-	// const movieID = movie.id;
-	// results.innerHTML += `<div class="card img-fluid col-xs-1 col-m-3 d-flex justify-content-center">
-	//         <div id="${movieID}" class="card-front">
-	//             <img class="movie-art img-fluid" src="${artworkURL}">
-	//         </div>
-	//     </div>`;
-
-	// Create div for card with Bootstrap classes required for formatting.
-	const cardDiv = document.createElement('div');
-	const cardClasses = [
-		'card',
-		'img-fluid',
-		'col-xs-1',
-		'col-m-3',
-		'd-flex',
-		'justify-content-center'
-	];
-	cardDiv.classList.add(...cardClasses);
-	cardDiv.setAttribute('data-popularity', media.popularity);
-
-	// Create div for card-front with Bootstrap classes required for formatting and ID attribute.
-	const cardFrontDiv = document.createElement('div');
-	cardFrontDiv.classList.add('card-front');
-
-	// Capture the unique movie ID from search and add to card-front.
-	const id = `${media.id}`;
-	cardFrontDiv.setAttribute('id', `${id}`);
-
-	// Create img to be hold movie artwork in results grid.
-	const imgArt = document.createElement('img');
-	const imgClasses = [
-		'movie-art',
-		'img-fluid'
-	];
-	imgArt.classList.add(...imgClasses);
-	imgArt.setAttribute('id', `${id}`);
-	imgArt.setAttribute('src', artworkURL);
-
-	// Create the card HTML element with all nested divs.
-	results.appendChild(cardDiv);
-	cardDiv.appendChild(cardFrontDiv);
-	cardFrontDiv.appendChild(imgArt);
+	// Create each movie artwork result card to be shown in the results grid and set its popularity.
+	results.insertAdjacentHTML(
+		'afterbegin',
+		`<div class="card img-fluid col-xs-1 col-m-3 d-flex justify-content-center" data-popularity="${media.popularity}">
+	        <div id="${media.id}" class="card-front">
+	            <img id="${media.id}" class="movie-art img-fluid" src="${artworkURL}">
+	        </div>
+	    </div>`
+	);
 
 	// Listen for a click on the movie artwork and show the movie details when it occurs.
 	const artCover = document.getElementById(id);
@@ -176,14 +143,14 @@ function renderArtwork(media) {
 }
 
 // Render the card containing all the movie or show details from the API request.
-function renderDetails(media, isMovie, isShow) {
+function renderDetails(media, mediaType) {
 	let mediaName;
 	let mediaDate;
-	if (isMovie) {
+	if (mediaType === 'movie') {
 		mediaName = 'title';
 		mediaDate = 'release_date';
 	}
-	if (isShow) {
+	if (mediaType === 'show') {
 		mediaName = 'name';
 		mediaDate = 'first_air_date';
 	}
@@ -207,22 +174,28 @@ function renderDetails(media, isMovie, isShow) {
 }
 
 // Fetch the list of watch providers where a movie is available to be streamed, rented, or bought.
-async function fetchStreamingData(id, isMovie, isShow) {
+async function fetchStreamingData(id, mediaType = 'movie') {
 	try {
-		let streamingResponse;
-		if (isMovie) {
-			streamingResponse = await fetch(
-				`https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`
-			);
+		let apiUrl = `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`;
+		if (mediaType === 'show') {
+			apiUrl = `https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`;
 		}
-		if (isShow) {
-			streamingResponse = await fetch(`https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`);
-		}
+		const streamingResponse = await fetch(apiUrl);
 		const streamingData = await checkStatusAndParse(streamingResponse);
 		return streamingData;
 	} catch (err) {
 		console.log(err);
 	}
+}
+
+// Movie fetch helper function.
+async function fetchMovieData(movieId) {
+	return await fetchStreamingData(movieId);
+}
+
+// Show fetch helper function.
+async function fetchShowData(showId) {
+	return await fetchStreamingData(showId, 'show');
 }
 
 // Render the data of where a movie can be streamed to the movie details card.

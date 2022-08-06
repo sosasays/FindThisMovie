@@ -6,7 +6,7 @@ FindThisMovie
 
 Have you ever wanted to stream or rent a movie but had no idea which of the dozens of streaming platforms had it available? That's the problem that this project set out to solve. 
 
-A simple way to find where you can watch your favorite movies.
+A simple way to find where you can watch your favorite movies and shows.
 
 This is my first project putting together all I have learned as it relates to JS, HTML, and CSS over the past three months.
 
@@ -16,7 +16,7 @@ Although this project was meant as a way to simply reinforce educational concept
 
 ### Dependencies
 
-* Aside from the app.js, index.html, and styles.css files you will require an API Token from The Movie Database (TMDB). Additional information on TMDB and their API can be found below:
+* See the dependencies listed in package.json. You will require an API Token from The Movie Database (TMDB). Additional information on TMDB and their API can be found below:
 
 https://developers.themoviedb.org/3
 
