@@ -674,7 +674,7 @@ function renderDetails(media, mediaType) {
             <div class="movie-info mb-3"><b>Description: </b><br>${media["overview"]}</div>
             <div class="stream-on" id="stream${media.id}">
                 <b>Watch Here</b>
-                <ul class="subscription"><b>Steam On:</b></ul>
+                <ul class="subscription"><b>Stream On:</b></ul>
                 <ul class="rent"><b>Rent On:</b></ul>
                 <ul class="buy"><b>Buy On:</b></ul>
             </div>
